@@ -23,6 +23,10 @@ uint32_t F(const bf_ctx& ctx, const uint32_brkdn x) {
     return (((ctx.S[0][a] + ctx.S[1][b]) ^ ctx.S[2][c]) + ctx.S[3][d]);
 }
 
+void BlowFish_setkey(blf_ctx& ctx, const uint8_t* key, uint32_t keylen) {
+    uint32_t data[2], temp;
+}
+
 void Blowfish_encrypt(blf_ctx& ctx, std::array<uint32_t, 2>& x) {
     const uint32_t* P = ctx.P;
     const uint32_t* S = ctx.S;
@@ -59,11 +63,15 @@ void BlowFish_decrpyt(blf_ctx& ctx, std::array<uint32_t, 2>& x) {
     const uint32_t* P = ctx.P;
     const uint32_t* S = ctx.S;
 
-    for (size_t i = 17; i != 0; i--) {
+    for (size_t i = 17; i != 1; i--) {
         xl ^= p;
         xr = F(xl) ^ xr;
         _swap(xl, xr);
     }
-
     _swap(xl, xr);
+    xr ^= P[1];
+    xl ^= P[0];
+    x[0] = xl;
+    x[1] = xr;
+    return;
 }
